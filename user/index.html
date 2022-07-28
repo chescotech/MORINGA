@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!-- partial:index.partial.html -->
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Invoice</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <div style="display: flex; width: 100%; text-align: center; justify-content: center">
+                <div style="width:90px; height:90px; margin-top: -29px;">
+                    <img style="width:100%;" src="templogo.png" />
+                </div>
+                <p style="font-weight: bold; margin-top: 10px; font-size:20px">SOUTHERN SWITCHGEAR & AUTOMATION LTD</p>
+            </div>
+            <h1>Invoice</h1>
+        </header>
+        <article>
+
+            <div class="TopAddress">
+                <div style="border: none; border-right: 1px solid #3b3b3b; width:40%; padding: 10px;">
+                    <div style="display:flex; justify-content:space-between;">
+
+                        <div style="padding-bottom: 5xp;">
+                            <br />
+                            <p style="font-size: 13px;">TPIN: </p>
+                            <br />
+                            <p style="font-size: 13px;">Plot No. F/1108/159, Kutwa Road, Villa Elizabeth, Lusaka</p>
+                            <p style="font-size: 13px;">Contact: +260770736095, +260979450444</p>
+                            <p style="font-size: 13px;">E-mail: ceo@samsungswitchgear.com</p>
+                            <p style="font-size: 13px;">Rav@southernswitchgear.com</p>
+                            <br />
+                        </div>
+                    </div>
+                    <div style="border:none; border-top: 1px solid #3b3b3b;">
+                        <div style="font-size: 13px;">Buyer</div>
+                        <div style="font-size: 13px; font-weight: bold">Cash</div>
+                    </div>
+                </div>
+
+                <div style="border: none; width:60%">
+                    <table class="topHeaderTable">
+                        <tr>
+                            <th>
+                                <div>Invoice No.</div>
+                                <p style="font-weight: bold; padding-top:5px">362</p>
+                            </th>
+                            <td>
+                                <div>Dated</div>
+                                <div style="font-weight: bold; padding-top: 5px;">
+                                    1-Sep-2021
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>Supplier's Ref.</div>
+                                <div style="font-weight: bold; padding-top: 5px;">SSAL/QT22/2021</div>
+                            </th>
+                            <td>
+                                <div>Other References(s)</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>Buyer's Order No.</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </th>
+                            <td>
+                                <div>Dated</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>Despatch Document No.</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </th>
+                            <td>
+                                <div>Delivery Note Date</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>Despatch through</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </th>
+                            <td>
+                                <div>Destination</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>Exchange Rate</div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </th>
+                            <td>
+                                <div></div>
+                                <div style="font-weight: bold; padding-top: 5px;"></div>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <div>
+                        <div
+                            style="padding-top:5px;padding-left: 8px; font-size:12px; margin-bottom:60px; border:none; border-top:1px solid #ccc">
+                            Terms of Delivery
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div style="border:none; border-top: 1px solid #3b3b3b; margin-bottom: 15px;"></div>
+
+            <table class="inventory">
+                <thead>
+                    <tr>
+                        <th class="num">No.</th>
+                        <th class="dis">Description</th>
+                        <th class="qt">Quantity</th>
+                        <th class="rate">Rate</th>
+                        <th class="per">Unit</th>
+                        <th class="per">Item Value</th>
+                        <th class="per">Dis</th>
+                        <th class="amount">ZMK | USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Item Name Review</td>
+                        <td>150.00</td>
+                        <td>4.00</td>
+                        <td>nos</td>
+                        <td>600</td>
+                        <td>6%</td>
+                        <td><span data-prefix>ZMK </span><span>600.00</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Item Name Review</td>
+                        <td>150.00</td>
+                        <td>4.00</td>
+                        <td>nos</td>
+                        <td>600</td>
+                        <td>10%</td>
+                        <td><span data-prefix>ZMK </span><span>70.00</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Item Name Review</td>
+                        <td>150.00</td>
+                        <td>4.00</td>
+                        <td>nos</td>
+                        <td>800</td>
+                        <td>60%</td>
+                        <td><span data-prefix>ZMK </span><span>800.00</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="border:none; border-top: 1px solid #3b3b3b"></div>
+            <table class="totals" style="border-collapse: collapse;">
+                <tr>
+                    <td class="num blank">
+                    </td>
+                    <td class="dis blank">
+                    </td>
+                    <td class="qt blank">
+                    </td>
+                    <td class="blank">
+                    </td>
+                    <td class="leftSide bold">
+                        <div>Item Value</div>
+                    </td>
+                    <td class="bold">
+                        <div>ZMK 1,470</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="num blank">
+                    </td>
+                    <td class="dis blank">
+
+                    </td>
+                    <td class="qt blank">
+                    </td>
+                    <td class="blank">
+                    </td>
+                    <td class="leftSide bold">
+                        <div>VAT</div>
+                    </td>
+                    <td class="bold">
+                        <div>16%</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="num blank">
+                    </td>
+                    <td class="dis blank">
+
+                    </td>
+                    <td class="qt blank">
+                    </td>
+                    <td class="blank">
+                    </td>
+                    <td class="bottomBox leftSide bold">
+                        <div>Total</div>
+                    </td>
+                    <td class="bottomBox bold">
+                        <div>ZMK 1,470</div>
+                    </td>
+                </tr>
+
+            </table>
+            <!-- <a class="add">+</a> -->
+
+            <div style="border:none; border-top: 1px solid #3b3b3b; margin-top:5px">
+                <div style="display:flex; justify-content: space-between;">
+
+                    <div style="padding-left: 10px; padding-right: 10px; padding-top: 10px; height:100px">
+                        <p style="font-size:12px">Amount changeable (in words)</p>
+                        <p style="font-size:13px; font-weight:bold">Zambian Kwacha Ninety Nine only</p>
+                    </div>
+
+                    <div style="font-size:13px; padding:10px">
+                        <p>E.& O.E</p>
+                    </div>
+
+                </div>
+
+                <div style="display:flex; font-size:13px; justify-content:space-between; ">
+                    <div style="width: 40%; padding:10px">
+                        <div style="margin-bottom: 7px; border:none; border-bottom: 1px solid #ccc; padding-bottom:6px">
+                            <div style="font-size: 15px;">
+                                Signature:
+                            </div>
+                            <div style="font-size: 15px;">
+                                Received By:
+                            </div>
+                            <div style="font-size: 15px;">
+                                Registration Number:
+                            </div>
+                        </div>
+
+                        <div style="text-decoration: underline; font-size: 14px;">Declaration</div>
+                        <div>
+                            We declare that this Invoice shows the actual price of the goods described and that all
+                            particulars are true and correct.
+                        </div>
+                    </div>
+
+
+                    <div style="width: 50%;">
+                        <div style="padding:10px">
+                            <p>Company's Bank Details</p>
+                            <div style="display:flex">
+                                <p>Bank Name</p>
+                                <p style="margin-left: 52px; font-weight: bold">: INDO Zambia Bank</p>
+                            </div>
+                            <div style="display:flex">
+                                <p>A/C No</p>
+                                <p style="margin-left: 78px; font-weight: bold">: 0162030000555</p>
+                            </div>
+                            <div style="display:flex">
+                                <p>Sort Code:</p>
+                                <p style="margin-left: 58px; font-weight: bold">: 090016</p>
+                            </div>
+                            <div style="display:flex">
+                                <p>Swift Code:</p>
+                                <p style="margin-left: 54px; font-weight: bold">: INZAZMLX</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size:13px; ">
+                <div style="width: 50%; padding: 10px; height:50px">
+                    Customer Signature
+                </div>
+                <div style="width: 50%; border:none; border-top: 1px solid #3b3b3b; border-left: 1px solid #3b3b3b;">
+                    <div style="font-weight: bold; text-align: center;">
+                        for SOUTHERN SWITCHGEAR & AUTOMATION LTD
+                    </div>
+                    <div style="margin-top:10px; display: flex; justify-content:flex-end; margin-right:18px;">
+                        Authorised Signatory
+                    </div>
+                </div>
+            </div>
+
+        </article>
+
+    </body>
+
+</html>
