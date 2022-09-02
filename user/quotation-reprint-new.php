@@ -20,7 +20,7 @@
     $invoiceNo = $rowss['id'];
     $cust_first = $_POST['customer'];
     $quote_number = $_GET['quote_id']; //$quotaton_rows['quote_id'];
-    $customer_ = mysqli_query($con, "SELECT * FROM `customer` WHERE cust_first = (SELECT  MAX(customer) from quotation_tb WHERE quote_id='$quote_number') ")or die(mysqli_error($con));
+    $customer_ = mysqli_query($con, "SELECT * FROM `customer` WHERE cust_first = (SELECT  MAX(customer) from quotation_tb WHERE quote_identity='$quote_number') ")or die(mysqli_error($con));
     
     $customerRows = mysqli_fetch_array($customer_);
     ?>
@@ -77,7 +77,7 @@
     $quote_identity = $quoteRows['quote_id'] + 1;
     $discountAmount = $_POST['discount'];
 
-    mysqli_query($con, " UPDATE  quotation_tb SET quote_id='$quote_identity',customer='$customer',discount='$discountAmount',currency='$exchange_id' WHERE status !='printed' ") or die(mysqli_error($con));
+    //mysqli_query($con, " UPDATE  quotation_tb SET quote_id='$quote_identity',customer='$customer',discount='$discountAmount',currency='$exchange_id' WHERE status !='printed' ") or die(mysqli_error($con));
 
     $queryb = mysqli_query($con, "select * from branch") or die(mysqli_error($con));
     $rowb = mysqli_fetch_array($queryb);
@@ -128,7 +128,7 @@
                     <div style="display:flex; justify-content:space-between;">
                         <div style="padding-bottom: 5xp;">
                             <br />
-                            <p style="font-size: 13px;"><?php echo $company->tPin($con); ?></p>
+                            <p style="font-size: 13px;"> TPIN: <?php echo $company->tPin($con); ?></p>
                             <br />
                             <p style="font-size: 13px;">Address: <?php echo $company->address($con); ?></p>
                             <br />
@@ -239,7 +239,7 @@
                     <?php
                     //$query = mysqli_query($con, "select * from sales_details LEFT join product on product.prod_id=sales_details.prod_id where sales_id='$sid'")or die(mysqli_error($con));
                     $query = mysqli_query($con, "select * from quotation_tb LEFT join product on product.prod_id=quotation_tb.prod_id"
-                            . " WHERE quote_id='$quote_number'") or die(mysqli_error($con));
+                            . " WHERE quote_identity='$quote_number'") or die(mysqli_error($con));
 
                     $grand = 0;
                     $count = 0;
@@ -258,7 +258,7 @@
                         $discountAmount2 = $row['discount'];
 
                         $total = $row['qty'] * $row['price'];
-                        $subTotal += $row['qty'] * $row['price'] - (($row['qty'] * $row['price']) * 0.16);
+                        $subTotal += $row['qty'] * $row['price'];
                         $subTotal_ += $row['qty'] * $row['price'];
                         //$pack_size = $row['pack_size'];
                         $grand = $grand + $total;
@@ -334,22 +334,7 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td class="num blank">
-                    </td>
-                    <td class="dis blank">
-                    </td>
-                    <td class="qt blank">
-                    </td>
-                    <td class="blank">
-                    </td>
-                    <td class="leftSide bold">
-                        <div>Vat @ 16 %</div>
-                    </td>
-                    <td class="bold">
-                        <div> <?php echo $currency_id . ' ' . number_format($vatValue2, 2); ?></div>
-                    </td>
-                </tr>
+              
 
 
                 <tr>
@@ -366,27 +351,14 @@
                         <div>Total</div>
                     </td>
                     <td class="bottomBox bold">
-                        <div> <?php echo $currency_id . ' ' . number_format(($subTotal - $new_amount_due) + $vatValue2, 2); ?></div>
+                        <div> <?php echo $currency_id . ' ' . number_format(($subTotal - $new_amount_due), 2); ?></div>
                     </td>
                 </tr>
 
             </table>
             <!-- <a class="add">+</a> -->
             <div style="border:none; border-top: 1px solid #3b3b3b; margin-top:5px">
-                <div style="display:flex; justify-content: space-between;">
-
-                    <div style="padding-left: 10px; padding-right: 10px; padding-top: 10px; height:100px">
-                        <p style="font-size:12px">Amount (in words)</p>
-                        <p style="font-size:13px; font-weight:bold">
-                            <?php echo AmountInWords($subTotal - $new_amount_due) . ' ( ' . $currency_id . ' ) ' ?>
-                        </p>
-                    </div>
-
-                    <div style="font-size:13px; padding:10px">
-                        <p>E.& O.E</p>
-                    </div>
-                </div>
-
+              
                 <div style="display:flex; font-size:13px; justify-content:space-between; ">
                     <div style="width: 40%; padding:10px">
 
@@ -398,38 +370,27 @@
                     </div>
 
 
-                    <div style="width: 50%;">
-                        <div style="padding:10px">
-                            <p>Company's Bank Details</p>
-                            <div style="display:flex">
-                                <p>Bank Name</p>
-                                <p style="margin-left: 52px; font-weight: bold">: INDO Zambia Bank</p>
-                            </div>
-                            <div style="display:flex">
-                                <p style="margin-left: 40px; font-weight: bold">
-
-                                    ZMK Acc No :  0162030000555</p>
-
-                            </div>
-                            <div style="display:flex">
-
-                                <p style="margin-left: 40px; font-weight: bold">USD Acc No : 016203100019</p>
-
-                            </div>
-                            <div style="display:flex">
-                                <p>Sort Code:</p>
-                                <p style="margin-left: 58px; font-weight: bold">: 090016</p>
-                            </div>
-                            <div style="display:flex">
-                                <p>Swift Code:</p>
-                                <p style="margin-left: 54px; font-weight: bold">: INZAZMLX</p>
-                            </div>
+                     <div style="width: 50%;">
+                    <div style="padding:10px">
+                        <p>Company's Bank Details</p>
+                        <div style="display:flex">
+                            <p>Bank Name</p>
+                            <p style="margin-left: 52px; font-weight: bold">: FNB Bank (Chesco Tech ) </p>
                         </div>
-
-
+                         <div style="display:flex">
+                            <p> ZMK Acc No</p>
+                            <p style="margin-left: 52px; font-weight: bold">:62832298469 </p>
+                        </div>
+                      
+                      
+                        <div style="display:flex">
+                            <p>Sort Code:</p>
+                            <p style="margin-left: 58px; font-weight: bold">: 260001
+                            </p>
+                        </div>
+                     
                     </div>
-
-
+                </div>
                 </div>
             </div>
 
@@ -437,11 +398,9 @@
                 <div style="width: 50%; padding: 10px; height:50px">
                     Customer Signature
                 </div>
-               <div style="width: 50%; border:none; border-top: 1px solid #3b3b3b; border-left: 1px solid #3b3b3b;">
-                    <div style="font-weight: bold; text-align: left;">
-                        for <?php
-                        echo $company->compName($con);
-                        ?>
+                <div style="width: 50%; border:none; border-top: 1px solid #3b3b3b; border-left: 1px solid #3b3b3b;">
+                    <div style="font-weight: bold; text-align: center;">
+                        for <?php echo $company->compName($con); ?>
                     </div>
                     <div style="margin-top:10px; display: flex; justify-content:flex-end; margin-right:18px;">
                         Authorised Signatory

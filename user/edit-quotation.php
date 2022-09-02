@@ -181,10 +181,11 @@ $queryb=mysqli_query($con,"select balance from customer where cust_id='$cid'")or
 <?php
 		$user_id = $_SESSION['id'];
               
-		$query=mysqli_query($con,"select * from quotation_tb LEFT join product on product.prod_id=quotation_tb.prod_id where quote_id='$quote_id' ")or die(mysqli_error($con));
+		$query=mysqli_query($con,"select * from quotation_tb LEFT join product on product.prod_id=quotation_tb.prod_id where quote_identity='$quote_id' ")or die(mysqli_error($con));
 			$grand=0;
 		while($row=mysqli_fetch_array($query)){
 				$id=$row['quote_id'];
+                                //echo 'id'.$id;
 				$total= $row['price'] * $row['qty'];
                                 $unitPrice = $row['price'] / $row['qty'];
 				$grand=$grand+$total;
@@ -212,13 +213,13 @@ $queryb=mysqli_query($con,"select balance from customer where cust_id='$cid'")or
 						<td><?php echo number_format($total,2);?></td>
                         <td>
 							
-					<a href="#updateordinance<?php echo $row['quote_identity'];?>" data-target="#updateordinance<?php echo $row['quote_identity'];?>" data-toggle="modal" style="color:#fff;" class="small-box-footer"><i class="glyphicon glyphicon-edit text-blue"></i></a>
+					<a href="#updateordinance<?php echo $row['quote_id'];?>" data-target="#updateordinance<?php echo $row['quote_id'];?>" data-toggle="modal" style="color:#fff;" class="small-box-footer"><i class="glyphicon glyphicon-edit text-blue"></i></a>
 		
-              <a href="#delete<?php echo $row['quote_identity'];?>" data-target="#delete<?php echo $row['quote_identity'];?>" data-toggle="modal" style="color:#fff;" class="small-box-footer"><i class="glyphicon glyphicon-trash text-red"></i></a>
+              <a href="#delete<?php echo $row['quote_id'];?>" data-target="#delete<?php echo $row['quote_id'];?>" data-toggle="modal" style="color:#fff;" class="small-box-footer"><i class="glyphicon glyphicon-trash text-red"></i></a>
               
 						</td>
                       </tr>
-					  <div id="updateordinance<?php echo $row['quote_identity'];?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+					  <div id="updateordinance<?php echo $row['quote_id'];?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog">
 	  <div class="modal-content" style="height:auto">
               <div class="modal-header">
@@ -227,10 +228,10 @@ $queryb=mysqli_query($con,"select balance from customer where cust_id='$cid'")or
                 <h4 class="modal-title">Update Sales Details</h4>
               </div>
               <div class="modal-body">
-			  <form class="form-horizontal" method="post" action="update-quotation-price.php?type=edit" enctype='multipart/form-data'>
+			  <form class="form-horizontal" method="post" action="update-quotation-price.php?type=edit&quote_id=<?php echo $_GET['quote_id'];?> " enctype='multipart/form-data'>
 					<input type="hidden" class="form-control" name="cid" value="<?php echo $cid;?>" required>  	
                                         <input type="hidden" class="form-control" id="price" name="quote_id" value="<?php echo $row['quote_id'];?>" required>  
-					<input type="hidden" class="form-control" id="price" name="id" value="<?php echo $row['quote_identity'];?>" required>  
+					<input type="hidden" class="form-control" id="price" name="id" value="<?php echo $row['quote_id'];?>" required>  
 				<div class="form-group">
 					<label class="control-label col-lg-3" for="price">Qty</label>
 					<div class="col-lg-9">
@@ -264,7 +265,8 @@ $queryb=mysqli_query($con,"select balance from customer where cust_id='$cid'")or
         </div><!--end of modal-dialog-->
  </div>
  <!--end of modal-->  
-<div id="delete<?php echo $row['quote_identity'];?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+ 
+<div id="delete<?php echo $row['quote_id'];?>" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog">
     <div class="modal-content" style="height:auto">
               <div class="modal-header">
@@ -273,12 +275,11 @@ $queryb=mysqli_query($con,"select balance from customer where cust_id='$cid'")or
                 <h4 class="modal-title">Delete Item</h4>
               </div>
               <div class="modal-body">
-        <form class="form-horizontal" method="post" action="delete-temp-quotation.php?type=edit" enctype='multipart/form-data'>
+                  <form class="form-horizontal" method="post" action="delete-temp-quotation.php?type=edit&quote_id=<?php echo $_GET['quote_id'];?> " enctype='multipart/form-data'>
           <input type="hidden" class="form-control" name="cid" value="<?php echo $cid;?>" required>   
-          <input type="hidden" class="form-control" id="price" name="id" value="<?php echo $row['quote_identity'];?>" required>  
-           <input type="hidden" class="form-control" id="price" name="quote_id" value="<?php echo $row['quote_id'];?>" required>  
-        <p>Are you sure you want to remove <?php echo $row['prod_name'];?>?</p>
-        
+          <input type="hidden"  class="form-control" id="price" name="id" value="<?php echo $id;?>" required>  
+           <input  type="hidden" class="form-control" id="price" name="quote_id" value="<?php echo $id;?>" required>  
+        <p>Are you sure you want to remove <?php echo $row['prod_name'];?>?</p>        
               </div><br>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Delete</button>

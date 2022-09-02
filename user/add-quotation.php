@@ -38,14 +38,6 @@ if ($barcode != "") {
 
             $total = $price * $qty;
 
-            /*
-              if ($count > 0) {
-              mysqli_query($con, "update quotation_tb set qty=qty+'$qty' where prod_id='$prod_id' and branch_id='$branch'")or die(mysqli_error($con));
-              } else {
-              mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id) VALUES('$prod_id','$qty','$price','$branch','$user_id')")or die(mysqli_error($con));
-              }
-             */
-
             if (isset($_GET['type'])) {
 
                 $_SESSION['customer'] = $_POST['customer'];
@@ -54,20 +46,21 @@ if ($barcode != "") {
 
                 $query1 = mysqli_query($con, "select * from quotation_tb where prod_id='$prod_id' and branch_id='$branch'  AND quote_id ='$quote_id'")or die(mysqli_error($con));
                 $count = mysqli_num_rows($query1);
+                $row = mysqli_fetch_array($query1);
+                $discount = $row['discount'];
 
                 if ($count > 0) {
-                    mysqli_query($con, "update quotation_tb set qty=qty+'$qty',quote_id='$quote_id',customer='$customer' where prod_id='$prod_id' and branch_id='$branch' ")or die(mysqli_error($con));
+                    mysqli_query($con, "update quotation_tb set qty=qty+'$qty',quote_identity='$quote_id',customer='$customer' ,discount='$discount' where prod_id='$prod_id' and branch_id='$branch' ")or die(mysqli_error($con));
                 } else {
-                    mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id,quote_id,customer) "
-                                    . "VALUES('$prod_id','$qty','$price','$branch','$user_id','$quote_id','$customer')")or die(mysqli_error($con));
+                    mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id,quote_id,customer,discount) "
+                                    . "VALUES('$prod_id','$qty','$price','$branch','$user_id','$quote_id','$customer' ,'$discount')")or die(mysqli_error($con));
                 }
-                //echo '$quote_id'.$quote_id;
                 echo "<script>document.location='edit-quotation.php?quote_id=$quote_id'</script>";
             } else {
                 if ($count > 0) {
-                    mysqli_query($con, "update quotation_tb set qty=qty+'$qty' where prod_id='$prod_id' and branch_id='$branch'")or die(mysqli_error($con));
+                    mysqli_query($con, "update quotation_tb set qty=qty+'$qty' ,discount='$discount' where prod_id='$prod_id' and branch_id='$branch'")or die(mysqli_error($con));
                 } else {
-                    mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id) VALUES('$prod_id','$qty','$price','$branch','$user_id')")or die(mysqli_error($con));
+                    mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id,discount) VALUES('$prod_id','$qty','$price','$branch','$user_id','$discount')")or die(mysqli_error($con));
                 }
                 echo "<script>document.location='quotation.php?cid=$cid'</script>";
             }
@@ -90,42 +83,40 @@ if ($barcode != "") {
     $noQtyInStock = $qtyRows['prod_qty'];
     $prodName = $qtyRows['prod_name'];
 
+    $query = mysqli_query($con, "select prod_sell_price,prod_id from product where prod_id='$name'")or die(mysqli_error($con));
+    $row = mysqli_fetch_array($query);
+    $price = $row['prod_sell_price'];
 
-    if ($qty <= $noQtyInStock) {
-        $query = mysqli_query($con, "select prod_sell_price,prod_id from product where prod_id='$name'")or die(mysqli_error($con));
-        $row = mysqli_fetch_array($query);
-        $price = $row['prod_sell_price'];
+    $query1 = mysqli_query($con, "select * from quotation_tb where prod_id='$name' and branch_id='$branch' and status !='printed'")or die(mysqli_error($con));
+    $count = mysqli_num_rows($query1);
 
-        $query1 = mysqli_query($con, "select * from quotation_tb where prod_id='$name' and branch_id='$branch' and status !='printed'")or die(mysqli_error($con));
+    $total = $price * $qty;
+
+    if (isset($_GET['type'])) {
+        $quote_id = $_POST['quote_id'];
+        $query1 = mysqli_query($con, "select * from quotation_tb where prod_id='$name' and branch_id='$branch' and quote_id ='$quote_id' and status='' ")or die(mysqli_error($con));
         $count = mysqli_num_rows($query1);
+        $_SESSION['customer'] = $_POST['customer'];
+        $customer = $_SESSION['customer'];
+        
+         $query_quote = mysqli_query($con, "select * from quotation_tb where  branch_id='$branch' and quote_identity ='$quote_id' and status='printed'  ")or die(mysqli_error($con));
+        $row = mysqli_fetch_array($query_quote);
+        $discount = $row['discount'];
 
-        $total = $price * $qty;
-
-        if (isset($_GET['type'])) {
-            $quote_id = $_POST['quote_id'];
-            $query1 = mysqli_query($con, "select * from quotation_tb where prod_id='$name' and branch_id='$branch' and quote_id ='$quote_id' and status='' ")or die(mysqli_error($con));
-            $count = mysqli_num_rows($query1);
-            $_SESSION['customer'] = $_POST['customer'];
-            $customer = $_SESSION['customer'];
-
-            if ($count > 0) {
-                mysqli_query($con, "update quotation_tb set qty=qty+'$qty',quote_id='$quote_id' where prod_id='$name' and branch_id='$branch' AND quote_id ='$quote_id' ")or die(mysqli_error($con));
-            } else {
-                mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id,quote_id,customer) "
-                                . "VALUES('$name','$qty','$price','$branch','$user_id','$quote_id','$customer')")or die(mysqli_error($con));
-            }
-            //echo '$quote_id'.$quote_id;
-            echo "<script>document.location='edit-quotation.php?quote_id=$quote_id'</script>";
+        if ($count > 0) {
+            mysqli_query($con, "update quotation_tb set qty=qty+'$qty',quote_identity='$quote_id' where prod_id='$name' ,discount='$discount' and branch_id='$branch' AND quote_id ='$quote_id' ")or die(mysqli_error($con));
         } else {
-            if ($count > 0) {
-                mysqli_query($con, "update quotation_tb set qty=qty+'$qty' where prod_id='$name' and branch_id='$branch' AND status !='printed' ")or die(mysqli_error($con));
-            } else {
-                mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id) VALUES('$name','$qty','$price','$branch','$user_id')")or die(mysqli_error($con));
-            }
-            echo "<script>document.location='quotation.php?cid=$cid'</script>";
+            mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id,quote_identity,customer,discount) "
+                            . "VALUES('$name','$qty','$price','$branch','$user_id','$quote_id','$customer',' $discount' )")or die(mysqli_error($con)); 
         }
+                      
+        echo "<script>document.location='edit-quotation.php?quote_id=$quote_id'</script>";
     } else {
-        echo "<script type='text/javascript'>alert('Error !!, you cannot sell " . $qty . " items of " . $prodName . " because it is more than what is in stock !!! ');</script>";
+        if ($count > 0) {
+            mysqli_query($con, "update quotation_tb set qty=qty+'$qty' where prod_id='$name'  and branch_id='$branch' AND status !='printed' ")or die(mysqli_error($con));
+        } else {
+            mysqli_query($con, "INSERT INTO quotation_tb(prod_id,qty,price,branch_id,user_id) VALUES('$name','$qty','$price','$branch','$user_id')")or die(mysqli_error($con));
+        }
         echo "<script>document.location='quotation.php?cid=$cid'</script>";
     }
 }

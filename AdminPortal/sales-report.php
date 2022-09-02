@@ -451,7 +451,7 @@ endif;
                                                         <td></td>      
                                                         <td></td>
                                                         <td>Total Amount Collected.</td>
-                                                        <td><?php echo 'K ' . number_format($amount_due, 2); ?></td>
+                                                        <td><?php echo 'K ' . number_format($amount_due + $partpaymentAmount, 2); ?></td>
                                                     </tr> 
 
                                                     <tr>   
@@ -466,7 +466,7 @@ endif;
                                                         <td></td>
                                                         <td>Total Profit.</td>
                                                         <td><?php
-                                                            $totalProfit = $amount_due - ($buyTotal + $total_expenses);
+                                                            $totalProfit = ($amount_due + $partpaymentAmount) - ($buyTotal + $total_expenses);
                                                             if ($totalAmountCollected > $totalProfit) {
                                                                 echo "<span class='label label-success'>" . ' K  ' . number_format($totalProfit, 2) . '<br>' . "</span>";
                                                             } else {

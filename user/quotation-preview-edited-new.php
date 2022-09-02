@@ -7,6 +7,8 @@
     <?php
     error_reporting(0);
     session_start();
+    include('Classes/Company.php');
+    $company = new Company();
 
     $id = $_SESSION['id'];
     $queryb = mysqli_query($con, "select * from branch")or die(mysqli_error($con));
@@ -79,7 +81,7 @@
     $quote_number = $_POST['quote_id']; //$quotaton_rows['quote_id'];
 
     $query = mysqli_query($con, "select * from quotation_tb LEFT join product on product.prod_id=quotation_tb.prod_id"
-            . " WHERE quote_id='$quote_number'") or die(mysqli_error($con));
+            . " WHERE quote_identity='$quote_number'") or die(mysqli_error($con));
     //echo 'quote_id '.$quote_number;
     $quotaton_rows_ = mysqli_fetch_array($query);
     $customername = $quotaton_rows_['customer'];
@@ -110,9 +112,9 @@
         <header>
             <div style="display: flex; width: 100%; text-align: center; justify-content: center">
                 <div style="width:90px; height:90px; margin-top: -29px;">
-                    <img style="width:100%;" src="../dist/img/my-logo.png" />
+                    <img style="width:100%;" src="../dist/uploads/comp/<?php echo $company->logo($con); ?>" />
                 </div>
-                <p style="font-weight: bold; margin-top: 10px; font-size:20px">SOUTHERN SWITCHGEAR & AUTOMATION LTD</p>
+                <p style="font-weight: bold; margin-top: 10px; font-size:20px"><?php echo $company->compName($con); ?></p>
             </div>
             <h1>Quotation</h1>
         </header>
@@ -123,18 +125,19 @@
                     <div style="display:flex; justify-content:space-between;">
                         <div style="padding-bottom: 5xp;">
                             <br />
-                            <p style="font-size: 13px;">TPIN: 1020702428</p>
+                            <p style="font-size: 13px;">TPIN: <?php echo $company->tPin($con); ?></p>
                             <br />
-                            <p style="font-size: 13px;">Plot No. F/1108/159, Kutwa Road, Villa Elizabeth, Lusaka</p>
-                            <p style="font-size: 13px;">Contact: +260770736095, +260979450444</p>
-                            <p style="font-size: 13px;">E-mail: ceo@samsungswitchgear.com</p>
-                            <p style="font-size: 13px;">Rav@southernswitchgear.com</p>
+                            <p style="font-size: 13px;">Address: <?php echo $company->address($con); ?></p>
+                            <br />
+                            <p style="font-size: 13px;">Contact: <?php echo $company->contact($con); ?></p>
                             <br />
                         </div>
                     </div>
                     <div style="border:none; border-top: 1px solid #3b3b3b;">
-                        <div style="font-size: 13px;">Quote To</div><br>
-                        <div style="font-size: 13px; font-weight: bold"><?php echo $customername; ?></div>
+                        <div style="font-size: 13px;">Quote To: <?php echo $customerRows['cust_first']; ?></div>                    
+                        <div style="font-size: 13px;">TPIN : <?php echo $customerRows['account_no']; ?></div>
+                        <div style="font-size: 13px;"> Address : <?php echo $customerRows['cust_address']; ?></div>
+                        <div style="font-size: 13px;"> Contact : <?php echo $customerRows['cust_contact']; ?></div>
                     </div>
                 </div>
 
@@ -234,13 +237,15 @@
                     //$query = mysqli_query($con, "select * from sales_details LEFT join product on product.prod_id=sales_details.prod_id where sales_id='$sid'")or die(mysqli_error($con));
 
                     $query1 = mysqli_query($con, "select * from quotation_tb LEFT join product on product.prod_id=quotation_tb.prod_id"
-                            . " WHERE quote_id='$quote_number'") or die(mysqli_error($con));
+                            . " WHERE quote_identity='$quote_number'") or die(mysqli_error($con));
 
                     $grand = 0;
                     $count = 0;
                     while ($row = mysqli_fetch_array($query1)) {
                         $count ++;
                         $order_no = $row['order_no'];
+
+                        $discountAmount2 = $row['discount'];
 
                         if ($row['prod_name'] == '') {
                             $prodName = $row['description'];
@@ -266,6 +271,9 @@
                             $vatFree += ($row['qty'] * $row['price'] );
                         }
 
+                        $subTotal_ += $row['qty'] * $row['price'];
+                        $currency_id = $row['currency'];
+
                         echo ' <tr><td>' . $count . '</td>
                                         <td>' . $prodName . '</td>
                                         <td>' . $qty . '</td>
@@ -279,6 +287,8 @@
                     $amountLessVat = ($vatFinalTotal / 1.16);
                     $vatValue = $vatFinalTotal - $amountLessVat;
                     $totalExlVAT = $vatFinalTotal - $vatValue;
+
+                    $new_amount_due = ($discountAmount2 / 100) * $subTotal_;
 
                     //mysqli_query($con, " UPDATE  quotation_tb SET quote_id='$quote_identity',customer='$customer',status='printed' WHERE status !='printed' ") or die(mysqli_error($con));
                     ?>
@@ -313,10 +323,10 @@
                     <td class="blank">
                     </td>
                     <td class="leftSide bold">
-                        <div>Discount</div>
+                        <div>Discount @ <?php echo $discountAmount2; ?> % </div>
                     </td>
                     <td class="bold">
-                        <div>ZMK <?php // echo number_format($subTotal, 2);  ?></div>
+                        <div>ZMK <?php echo number_format($new_amount_due, 2); ?></div>
                     </td>
                 </tr>
                 <tr>
@@ -351,7 +361,7 @@
                         <div>Total</div>
                     </td>
                     <td class="bottomBox bold">
-                        <div>ZMK <?php echo number_format($subTotal, 2); ?></div>
+                        <div> <?php echo $currency_id . ' ' . number_format(($subTotal - $new_amount_due), 2); ?></div>
                     </td>
                 </tr>
 
@@ -386,11 +396,35 @@
                             </div>
                         </div>
 
-                        <div style="text-decoration: underline; font-size: 14px;">Validity of Quotation</div>
+                        <div style="text-decoration: underline; font-size: 14px;">Terms  of Quotation</div>
                         <div>
-                            Quotation is valid for 7 Days
+                            COMMENTS: This Quotation is Valid for 7 days
+                            Delivery in 5-10 working days.
+                            Deliveries outside Lusaka will attract a charge
                         </div>
                     </div>
+
+
+                    <div style="padding:10px">
+                        <p>Company's Bank Details</p>
+                        <div style="display:flex">
+                            <p>Bank Name</p>
+                            <p style="margin-left: 52px; font-weight: bold">: FNB Bank (Chesco Tech ) </p>
+                        </div>
+                        <div style="display:flex">
+                            <p> ZMK Acc No</p>
+                            <p style="margin-left: 52px; font-weight: bold">:62832298469 </p>
+                        </div>
+
+                        <div style="display:flex">
+                            <p>Sort Code:</p>
+                            <p style="margin-left: 58px; font-weight: bold">: 260001
+                            </p>
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
 
@@ -400,7 +434,7 @@
                 </div>
                 <div style="width: 50%; border:none; border-top: 1px solid #3b3b3b; border-left: 1px solid #3b3b3b;">
                     <div style="font-weight: bold; text-align: center;">
-                        for SOUTHERN SWITCHGEAR & AUTOMATION LTD
+                        for <?php echo $company->compName($con); ?>
                     </div>
                     <div style="margin-top:10px; display: flex; justify-content:flex-end; margin-right:18px;">
                         Authorised Signatory

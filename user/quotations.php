@@ -65,17 +65,15 @@ endif;
                                             <tr>
                                                 <th>Quotation Number</th>
                                                 <th>Date Created</th>
-                                                <th>Customer</th>
-                                                <th>Invoice</th>
+                                                <th>Customer</th>                                              
                                                 <th>Edit</th>
-                                                <th>Print Quotation</th>
-                                                <th>Send Quotation</th>
+                                                <th>Print Quotation</th>                                              
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             $totalAmountDue = 0;
-                                            $query = mysqli_query($con, "SELECT quote_id,customer,date_added FROM `quotation_tb` GROUP BY quote_id ORDER BY quote_id DESC ") or die(mysqli_error($con));
+                                            $query = mysqli_query($con, "SELECT quote_identity AS quote_id,customer,date_added FROM `quotation_tb` GROUP BY quote_identity ORDER BY quote_identity DESC ") or die(mysqli_error($con));
                                             while ($row = mysqli_fetch_array($query)) {
                                                 $customer = $row['customer'];
                                             ?>
@@ -88,17 +86,12 @@ endif;
                                                     </td>
 
                                                     <td>
-                                                        <a href="quote_generate_invoice?quote_id=<?php echo $row['quote_id']; ?>" style="color: #003eff "><b>Generate Invoice</b></i></a>
-                                                    </td>
-                                                    <td>
                                                         <a href="edit-quotation?customer=<?php echo $customer; ?>&quote_id=<?php echo $row['quote_id']; ?>" style="color: #003eff "><b>Edit Quotation</b></i></a>
                                                     </td>
                                                     <td>
                                                         <a href="quotation-reprint-new.php?quote_id=<?php echo $row['quote_id']; ?>" style="color: #003eff "><b>Print Quotation</b></i></a>
                                                     </td>
-                                                    <td>
-                                                        <a href="quotations.php?wp_quote_id=<?php echo $row['quote_id']; ?>" style="color: #003eff "><b>Send Via WhatsApp</b></i></a>
-                                                    </td>
+                                                  
 
                                                 </tr>
                                             <?php } ?>

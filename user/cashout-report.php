@@ -170,7 +170,7 @@ endif;
                                                             LEFT JOIN product ON product.prod_id = sales_details.prod_id
                                                             INNER JOIN sales ON sales.sales_id=sales_details.sales_id
                                                             INNER JOIN user ON user.user_id = sales.user_id                                                            
-                                                            WHERE DATE(sales.date_added)=DATE(NOW()) AND user.user_id='$userId'  GROUP By sales.sales_id") or die(mysqli_error($con));
+                                                            WHERE DATE(sales.date_added)=DATE(NOW()) AND user.user_id='$userId'  GROUP BY prod_name,stock_branch_id") or die(mysqli_error($con));
 
                                                 $partPaymentsByModes = mysqli_query($con, "SELECT SUM(amount) AS amount,name FROM `part_payments_tb`
                                                     LEFT JOIn modes_of_payment_tb on modes_of_payment_tb.payment_mode_id=part_payments_tb.payment_mode_id
@@ -183,13 +183,17 @@ endif;
 
                                                 $partPayments = mysqli_query($con, "SELECT SUM(amount) AS amount FROM `part_payments_tb` WHERE DATE(date_added)=DATE(NOW()) AND user_id='$userId'  ") or die(mysqli_error($con));
 
+                                                  $salesRow = mysqli_fetch_array($salesTotals);
+                                                    $tenderedAmount = $salesRow['amount_due'];
                                                 echo ' <center><h3 class="box-title" style=" color: black"><b><u> Todays Cash Out Report </u></b></h3></center><br>';
 
                                                 while ($row = mysqli_fetch_array($query)) {
                                                     $totalSold = $row['qty'] * $row['prod_sell_price'];
                                                     $totalAmountCollected += $totalSold;
                                                     $discount += $row['discount'];
-                                                    $amount_due += $row['amount_due'];
+                                                   
+                                                    
+                                                  
                                                 ?>
                                                     <tr>
                                                         <td><?php
@@ -232,16 +236,7 @@ endif;
                                                     <td><?php echo 'K ' . number_format($discount, 2); ?></td>
                                                 </tr>
 
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>Total Amount to Cash Out</td>
-                                                    <td><?php echo 'K ' . number_format($amount_due, 2); ?></td>
-                                                </tr>
+                                               
 
 
                                                 <tr>
@@ -268,6 +263,19 @@ endif;
                                                         echo 'K ' . number_format($partpaymentAmount, 2);
                                                         ?></td>
                                                 </tr>
+                                                
+                                                 <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>Total Amount to Cash Out</td>
+                                                    <td><?php echo 'K ' . number_format($tenderedAmount + $partpaymentAmount, 2); ?></td>
+                                                </tr>
+                                                
+                                                
                                             </tbody>
                                         </table>
                                     </div><!-- /.box-body -->

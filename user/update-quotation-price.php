@@ -31,14 +31,14 @@ if ($priceTag != "none") {
         $price = $discountPrice;
     }
 
-    mysqli_query($con, "update quotation_tb set qty='$qty', price='$price',price_tag='$priceTag' where quote_identity='$id'")or die(mysqli_error($con));
+    mysqli_query($con, "update quotation_tb set qty='$qty', price='$price',price_tag='$priceTag' where quote_id='$id'")or die(mysqli_error($con));
 } else {
-    mysqli_query($con, "update quotation_tb set qty='$qty',price_tag='$priceTag' where quote_identity='$id'")or die(mysqli_error($con));
+    mysqli_query($con, "update quotation_tb set qty='$qty',price_tag='$priceTag' where quote_id='$id'")or die(mysqli_error($con));
 }
 
 
 if (isset($_GET['type'])) {
-    $quote_id = $_POST['quote_id'];
+    $quote_id = $_GET['quote_id'];
     echo "<script>document.location='edit-quotation.php?quote_id=$quote_id'</script>";
 } else {
     echo "<script>document.location='quotation.php'</script>";
